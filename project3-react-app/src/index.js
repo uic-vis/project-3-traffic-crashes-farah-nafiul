@@ -5,6 +5,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+const dataURL = "https://raw.githubusercontent.com/uic-vis/project-3-traffic-crashes-farah-nafiul/main/project3-react-app/src/data/filmdeathcounts.csv"
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
