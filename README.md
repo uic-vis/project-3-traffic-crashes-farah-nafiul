@@ -6,6 +6,6 @@ How to run -
 1. pull the project from github
 2. open terminal
 3. go to project folder
-4. cd project3-react-app
+4. cd project3-source-code
 5. npm install 
-6. npm start
+6. npm run dev
