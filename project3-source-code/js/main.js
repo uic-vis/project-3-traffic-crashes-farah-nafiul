@@ -29,6 +29,17 @@ function init() {
 
         let mpaaRatings = Array.from(new Set(deathCountData.map(d => d.mpaaRating)));
         bottomLeft(genreList, genresObj, deathCountData, mpaaRatings);
+
+        d3.selectAll(("input[name='toggleVis23']")).on("change", function () {
+            console.log(this.value)
+            if (this.value === 'Genres') {
+                d3.select('#vis3').style('display', 'none')
+                d3.select('#vis2').style('display', 'block')
+            } else {
+                d3.select('#vis3').style('display', 'block')
+                d3.select('#vis2').style('display', 'none')
+            }
+        });
     })
 
     topRight();
