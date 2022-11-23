@@ -1,5 +1,5 @@
-function init(){
-    d3.csv('./data/filmdeathcounts.csv').then((data) =>{
+function init() {
+    d3.csv('./data/filmdeathcounts.csv').then((data) => {
         let deathCountData = data.map(d => ({
             film: d['Film'],
             year: +d['Year'],
@@ -9,7 +9,7 @@ function init(){
             director: d['Director'],
             length: +d['Length_Minutes'],
             imdbRating: +d['IMDB_Rating']
-          }));
+        }));
 
         console.log(deathCountData)
 
@@ -18,14 +18,16 @@ function init(){
 
         let decade_stats = decadeStatsFunction(yearly_stats);
         console.log(decade_stats)
+
+        topLeft(yearly_stats, decade_stats);
     })
-    topLeft();
+
     topRight();
     bottomLeft();
     bottomRight();
 
 }
 
-window.onload = () =>{
+window.onload = () => {
     init();
 }
