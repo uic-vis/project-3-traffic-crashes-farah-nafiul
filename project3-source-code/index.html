@@ -10,12 +10,12 @@
   <body>
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-6" style="height: 50vh;">TopLeft</div>
-        <div class="col-md-6" style="height: 50vh;">TopRight</div>
+        <div class="col-md-6" style="height: 50vh;" id="topLeft"></div>
+        <div class="col-md-6" style="height: 50vh;" id="topRight"></div>
       </div>
       <div class="row">
-        <div class="col-md-6" style="height: 50vh;">BottomLeft</div>
-        <div class="col-md-6" style="height: 50vh;">BottomRight</div>
+        <div class="col-md-6" style="height: 50vh;" id="bottomLeft"></div>
+        <div class="col-md-6" style="height: 50vh;" id="bottomRight"></div>
       </div>
     </div>
 
@@ -27,7 +27,13 @@
 
     <!-- d3 -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <script src="./js/getData.js"></script>
     
+    <script src="./js/TopLeft.js"></script>
+    <script src="./js/BottomLeft.js"></script>
+    <script src="./js/TopRight.js"></script>
+    <script src="./js/BottomRight.js"></script>
     <script src="./js/main.js"></script>
   </body>
 </html>
