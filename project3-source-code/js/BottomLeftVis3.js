@@ -1,19 +1,22 @@
 let margin, visWidth, visHeight, x, y, mpaaColorCoding
+let inset = 6;
 const bottomLeftVis3 = (mpaaRatings, deathCountData) => {
+    console.log(d3.select('#scatter2').node().parentNode)
     // define the margins
-    margin = ({ top: 10, right: 20, bottom: 50, left: 105 });
+    margin = ({ top: 20, right: 30, bottom: 30, left: 40 });
     // define the width of the visualization
-    visWidth = d3.select('#scatter2').node().parentNode.clientWidth;
+    visWidth = d3.select('#scatter2').node().clientWidth;
     // define the height of the visualization
     visHeight = d3.select('#scatter2').node().parentNode.clientHeight;
     // define x using IMDB ratings
+    console.log(visHeight, visWidth)
     x = d3.scaleLinear()
         .domain(d3.extent(deathCountData, d => d.imdbRating)).nice()
-        .range([0, visWidth])
+        .range([margin.left + inset, visWidth - margin.right - inset])
     // define y using body count
     y = d3.scaleLinear()
         .domain(d3.extent(deathCountData, d => d.bodyCount)).nice()
-        .range([visHeight, 0])
+        .range([visHeight-margin.bottom -inset, margin.top + inset])
 
     // map colors to MPAA rating category using standard color scheme
     mpaaColorCoding = d3.scaleOrdinal().domain(mpaaRatings).range(d3.schemeCategory10);
@@ -22,46 +25,73 @@ const bottomLeftVis3 = (mpaaRatings, deathCountData) => {
 }
 
 function xAxis(g, scale, label) {
-    g.attr('transform', `translate(0, ${visHeight})`)
-        // add axis
+    // g.attr('transform', `translate(0, ${visHeight - margin.bottom})`)
+    //     // add axis
+    //     .call(d3.axisBottom(scale))
+    //     // remove baseline
+    //     .call(g => g.select('.domain').remove())
+    //     // add grid lines
+    //     // references https://observablehq.com/@d3/connected-scatterplot
+    //     .call(g => g.selectAll('.tick line')
+    //         .clone()
+    //         .attr('stroke', '#d3d3d3')
+    //         .attr('y1', -visHeight)
+    //         .attr('y2', 0))
+    //     // add label
+    //     .append('text')
+    //     .attr('x', visWidth / 2)
+    //     .attr('y', 40)
+    //     .attr('fill', 'black')
+    //     .attr('text-anchor', 'middle')
+    //     .text(label)
+
+    g.attr("transform", `translate(0,${visHeight - margin.bottom})`)
         .call(d3.axisBottom(scale))
-        // remove baseline
-        .call(g => g.select('.domain').remove())
-        // add grid lines
-        // references https://observablehq.com/@d3/connected-scatterplot
-        .call(g => g.selectAll('.tick line')
-            .clone()
-            .attr('stroke', '#d3d3d3')
-            .attr('y1', -visHeight)
-            .attr('y2', 0))
-        // add label
-        .append('text')
-        .attr('x', visWidth / 2)
-        .attr('y', 40)
-        .attr('fill', 'black')
-        .attr('text-anchor', 'middle')
-        .text(label)
+        .call(g => g.select(".domain").remove())
+        .call(g => g.selectAll(".tick line").clone()
+            .attr("y2", margin.top + margin.bottom - visHeight)
+            .attr("stroke-opacity", 0.1))
+        .call(g => g.append("text")
+            .attr("x", visWidth - margin.left - inset)
+            .attr("y", margin.bottom )
+            .attr("fill", "currentColor")
+            .attr("text-anchor", "end")
+            .text(label));
 }
 
 function yAxis(g, scale, label) {
     // add axis
-    g.call(d3.axisLeft(scale))
-        // remove baseline
-        .call(g => g.select('.domain').remove())
-        // add grid lines
-        // refernces https://observablehq.com/@d3/connected-scatterplot
-        .call(g => g.selectAll('.tick line')
-            .clone()
-            .attr('stroke', '#d3d3d3')
-            .attr('x1', 0)
-            .attr('x2', visWidth))
-        // add label
-        .append('text')
-        .attr('x', -40)
-        .attr('y', visHeight / 2)
-        .attr('fill', 'black')
-        .attr('dominant-baseline', 'middle')
-        .text(label)
+    // g.attr("transform", `translate(${margin.left},0)`)
+    // .call(d3.axisLeft(scale))
+    //     // remove baseline
+    //     .call(g => g.select('.domain').remove())
+    //     // add grid lines
+    //     // refernces https://observablehq.com/@d3/connected-scatterplot
+    //     .call(g => g.selectAll('.tick line')
+    //         .clone()
+    //         .attr('stroke', '#d3d3d3')
+    //         .attr('x1', 0)
+    //         .attr('x2', visWidth - margin.left - margin.right))
+    //     // add label
+    //     .append('text')
+    //     .attr('x', -margin.left)
+    //     .attr('y', 10)
+    //     .attr('fill', 'black')
+    //     .attr('dominant-baseline', 'middle')
+    //     .text(label)
+
+        g.attr("transform", `translate(${margin.left},0)`)
+        .call(d3.axisLeft(scale))
+        .call(g => g.select(".domain").remove())
+        .call(g => g.selectAll(".tick line").clone()
+            .attr("x2", visWidth - margin.left - margin.right)
+            .attr("stroke-opacity", 0.1))
+        .call(g => g.append("text")
+            .attr("x", -margin.left)
+            .attr("y", 10)
+            .attr("fill", "currentColor")
+            .attr("text-anchor", "start")
+            .text(label));
 }
 function brush(deathCountData) {
 
@@ -70,13 +100,14 @@ function brush(deathCountData) {
 
     // create the svg
     const svg = d3.select('#scatter2').append('svg')
-        .attr('width', visWidth + margin.left + margin.right)
-        .attr('height', visHeight + margin.top + margin.bottom)
+        .attr('width', visWidth)
+        .attr('height', visHeight)
+        .attr("viewBox", [0, 0, visWidth, visHeight])
         .property('value', initialValue);
 
     // append the g element
     const g = svg.append('g')
-        .attr('transform', `translate(${margin.left}, ${margin.top})`);
+        // .attr('transform', `translate(${margin.left}, 0)`);
 
     // define the x and y axes titles
     g.append("g").call(xAxis, x, 'IMDB Rating');
