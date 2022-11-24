@@ -1,6 +1,8 @@
-let margin, visWidth, visHeight, x, y, mpaaColorCoding
+let margin, visWidth, visHeight, x, y, mpaaColorCoding, mpaaRatingsCounts, mpaaRatings
 let inset = 6;
-const bottomLeftVis3 = (mpaaRatings, deathCountData) => {
+const bottomLeftVis3 = (ratings, deathCountData, ratingCounts) => {
+    mpaaRatings = ratings;
+    mpaaRatingsCounts = ratingCounts;
     console.log(d3.select('#scatter2').node().parentNode)
     // define the margins
     margin = ({ top: 20, right: 30, bottom: 30, left: 40 });
@@ -16,35 +18,22 @@ const bottomLeftVis3 = (mpaaRatings, deathCountData) => {
     // define y using body count
     y = d3.scaleLinear()
         .domain(d3.extent(deathCountData, d => d.bodyCount)).nice()
-        .range([visHeight-margin.bottom -inset, margin.top + inset])
+        .range([visHeight - margin.bottom - inset, margin.top + inset])
 
     // map colors to MPAA rating category using standard color scheme
     mpaaColorCoding = d3.scaleOrdinal().domain(mpaaRatings).range(d3.schemeCategory10);
 
     brush(deathCountData);
+
+    donutChart(mpaaRatingsCounts, {
+        name: d => d.mpaa_rating,
+        value: d => d.count,
+        width: d3.select('#donut').node().clientWidth,
+        height: d3.select('#donut').node().parentNode.clientHeight
+    })
 }
 
 function xAxis(g, scale, label) {
-    // g.attr('transform', `translate(0, ${visHeight - margin.bottom})`)
-    //     // add axis
-    //     .call(d3.axisBottom(scale))
-    //     // remove baseline
-    //     .call(g => g.select('.domain').remove())
-    //     // add grid lines
-    //     // references https://observablehq.com/@d3/connected-scatterplot
-    //     .call(g => g.selectAll('.tick line')
-    //         .clone()
-    //         .attr('stroke', '#d3d3d3')
-    //         .attr('y1', -visHeight)
-    //         .attr('y2', 0))
-    //     // add label
-    //     .append('text')
-    //     .attr('x', visWidth / 2)
-    //     .attr('y', 40)
-    //     .attr('fill', 'black')
-    //     .attr('text-anchor', 'middle')
-    //     .text(label)
-
     g.attr("transform", `translate(0,${visHeight - margin.bottom})`)
         .call(d3.axisBottom(scale))
         .call(g => g.select(".domain").remove())
@@ -53,34 +42,14 @@ function xAxis(g, scale, label) {
             .attr("stroke-opacity", 0.1))
         .call(g => g.append("text")
             .attr("x", visWidth - margin.left - inset)
-            .attr("y", margin.bottom )
+            .attr("y", margin.bottom - inset)
             .attr("fill", "currentColor")
             .attr("text-anchor", "end")
             .text(label));
 }
 
 function yAxis(g, scale, label) {
-    // add axis
-    // g.attr("transform", `translate(${margin.left},0)`)
-    // .call(d3.axisLeft(scale))
-    //     // remove baseline
-    //     .call(g => g.select('.domain').remove())
-    //     // add grid lines
-    //     // refernces https://observablehq.com/@d3/connected-scatterplot
-    //     .call(g => g.selectAll('.tick line')
-    //         .clone()
-    //         .attr('stroke', '#d3d3d3')
-    //         .attr('x1', 0)
-    //         .attr('x2', visWidth - margin.left - margin.right))
-    //     // add label
-    //     .append('text')
-    //     .attr('x', -margin.left)
-    //     .attr('y', 10)
-    //     .attr('fill', 'black')
-    //     .attr('dominant-baseline', 'middle')
-    //     .text(label)
-
-        g.attr("transform", `translate(${margin.left},0)`)
+    g.attr("transform", `translate(${margin.left},0)`)
         .call(d3.axisLeft(scale))
         .call(g => g.select(".domain").remove())
         .call(g => g.selectAll(".tick line").clone()
@@ -94,6 +63,7 @@ function yAxis(g, scale, label) {
             .text(label));
 }
 function brush(deathCountData) {
+    d3.select('#scatter2').select('svg').remove()
 
     // value for when there is no brush
     const initialValue = deathCountData;
@@ -107,7 +77,7 @@ function brush(deathCountData) {
 
     // append the g element
     const g = svg.append('g')
-        // .attr('transform', `translate(${margin.left}, 0)`);
+    // .attr('transform', `translate(${margin.left}, 0)`);
 
     // define the x and y axes titles
     g.append("g").call(xAxis, x, 'IMDB Rating');
@@ -155,7 +125,16 @@ function brush(deathCountData) {
         dots.attr('fill', d => isBrushed(d) ? mpaaColorCoding(d.mpaaRating) : 'gray');
 
         // update the data that appears in the variable for the vis
-        svg.property('value', deathCountData.filter(isBrushed)).dispatch('input');
+        // svg.property('value', deathCountData.filter(isBrushed)).dispatch('input');
+        // console.log(deathCountData.filter(isBrushed))
+
+        mpaaRatingsCounts = getMpaaRatingsCounts(mpaaRatings, deathCountData.filter(isBrushed))
+        donutChart(mpaaRatingsCounts, {
+            name: d => d.mpaa_rating,
+            value: d => d.count,
+            width: d3.select('#donut').node().clientWidth,
+            height: d3.select('#donut').node().parentNode.clientHeight
+        })
     }
 
     // the onEnd event handler
@@ -166,7 +145,15 @@ function brush(deathCountData) {
 
             // reset the color of all of the dots
             dots.attr('fill', d => mpaaColorCoding(d.mpaaRating));
-            svg.property('value', initialValue).dispatch('input');
+            // svg.property('value', initialValue).dispatch('input');
+            // console.log(initialValue)
+            mpaaRatingsCounts = getMpaaRatingsCounts(mpaaRatings, initialValue)
+            donutChart(mpaaRatingsCounts, {
+                name: d => d.mpaa_rating,
+                value: d => d.count,
+                width: d3.select('#donut').node().clientWidth,
+                height: d3.select('#donut').node().parentNode.clientHeight
+            })
         }
     }
 

@@ -109,7 +109,7 @@ const getGenresObj = (genreList, deathCountData) => {
 
 
 // counting movies based on mpaa ratings
-const gerMpaaRatingsCounts = () => {
+const getMpaaRatingsCounts = (mpaaRatings, mpaaData) => {
 
   // data structures
   let result = []

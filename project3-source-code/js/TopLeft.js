@@ -7,7 +7,7 @@ let titlesForTooltip = { 'averageBody': 'body_count', 'body_count': 'body_count'
 
 const topLeft = (yearly_stats, decade_stats) => {
     // console.log(d3.select('#firstVis').node().parentNode.clientHeight)
-    // console.log(d3.select('#firstVis').node().parentNode.clientWidth)
+    // console.log(d3.select('#firstVis').node().clientWidth)
     // console.log(d3.select('#firstVis').node().parentNode.clientHeight)
 
     chooseYearOrDecade = yearly_stats;
@@ -37,7 +37,7 @@ const topLeft = (yearly_stats, decade_stats) => {
                 y: d => d[attributeSelection],
                 xDomain: chooseYearOrDecade.map(d => d.year), // sort by descending frequency
                 yLabel: attributeSelection,
-                width: d3.select('#firstVis').node().parentNode.clientWidth,
+                width: d3.select('#firstVis').node().clientWidth,
                 height: d3.select('#firstVis').node().parentNode.clientHeight,
                 color: "steelblue",
                 title1: 'year',
@@ -78,7 +78,7 @@ const topLeft = (yearly_stats, decade_stats) => {
                 y: d => d[attributeSelection],
                 xDomain: chooseYearOrDecade.map(d => d.year), // sort by descending frequency
                 yLabel: attributeSelection,
-                width: d3.select('#firstVis').node().parentNode.clientWidth,
+                width: d3.select('#firstVis').node().clientWidth,
                 height: d3.select('#firstVis').node().parentNode.clientHeight,
                 color: "steelblue",
                 title1: 'year',
@@ -101,7 +101,7 @@ const topLeft = (yearly_stats, decade_stats) => {
         y: d => d[attributeSelection],
         xDomain: chooseYearOrDecade.map(d => d.year), // sort by descending frequency
         yLabel: attributeSelection,
-        width: d3.select('#firstVis').node().parentNode.clientWidth,
+        width: d3.select('#firstVis').node().clientWidth,
         height: d3.select('#firstVis').node().parentNode.clientHeight,
         color: "steelblue",
         title1: 'year',

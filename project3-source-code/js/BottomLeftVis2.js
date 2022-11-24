@@ -23,7 +23,7 @@ const bottomLeftVis2 = (genreList, genresObj, deathCountData, mpaaRatings) => {
                 xDomain: d3.groupSort(genresObj, ([d]) => -d[selectedAttrib], d => d.genre), // sort by descending frequency
                 yLabel: selectedAttrib,
                 xLabel: 'Genres',
-                width: d3.select('#barchart1').node().parentNode.clientWidth,
+                width: d3.select('#barchart1').node().clientWidth,
                 height: d3.select('#barchart1').node().parentNode.clientHeight,
                 color: "steelblue",
                 title1: 'Genre',
@@ -48,7 +48,7 @@ const bottomLeftVis2 = (genreList, genresObj, deathCountData, mpaaRatings) => {
         xDomain: d3.groupSort(genresObj, ([d]) => -d[selectedAttrib], d => d.genre), // sort by descending frequency
         yLabel: selectedAttrib,
         xLabel: 'Genres',
-        width: d3.select('#barchart1').node().parentNode.clientWidth,
+        width: d3.select('#barchart1').node().clientWidth,
         height: d3.select('#barchart1').node().parentNode.clientHeight,
         color: "steelblue",
         title1: 'Genre',
@@ -68,7 +68,7 @@ const bottomLeftVis2 = (genreList, genresObj, deathCountData, mpaaRatings) => {
         xLabel: "Year →",
         yLabel: "↑ Death Count",
         stroke: "steelblue",
-        width: d3.select('#scatter1').node().parentNode.clientWidth,
+        width: d3.select('#scatter1').node().clientWidth,
         height: d3.select('#scatter1').node().parentNode.clientHeight,
         title1: 'Year',
         title2: 'IMDB',
