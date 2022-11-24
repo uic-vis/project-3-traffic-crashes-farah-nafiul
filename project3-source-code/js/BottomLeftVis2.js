@@ -1,7 +1,7 @@
 let genAttr = ["averageBody", "body_count", "total_film"];
 let selectedAttrib = 'averageBody'
 let scatterPlotData;
-const bottomLeft = (genreList, genresObj, deathCountData, mpaaRatings) => {
+const bottomLeftVis2 = (genreList, genresObj, deathCountData, mpaaRatings) => {
     d3.select("#genreAttrib").selectAll("*").remove();
 
     scatterPlotData = deathCountData.filter(death => death.genre.includes("War"));

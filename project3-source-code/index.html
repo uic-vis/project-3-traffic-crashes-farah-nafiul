@@ -11,6 +11,10 @@
       integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
       crossorigin="anonymous"
     />
+    <link
+      rel="stylesheet"
+      href="//rawgithub.com/Caged/d3-tip/master/examples/example-styles.css"
+    />
   </head>
   <body>
     <div class="container-fluid">
@@ -61,8 +65,8 @@
               <h5>Movie Death Trends by Genres</h5>
             </div>
           </div>
-          <div class="row" style="height: 40vh; display: block" id="vis2">
-            <div class="col-md-12">
+          <div class="row" style="height: 40vh">
+            <div class="col-md-12" id="vis2">
               <div class="row" style="height: 17vh">
                 <div class="col-md-12" id="barchart1"></div>
               </div>
@@ -70,11 +74,17 @@
                 <div class="col-md-12" id="scatter1"></div>
               </div>
             </div>
+            <div class="col-md-12" id="vis3" style="display: none">
+              <div class="row" style="height: 17vh">
+                <div class="col-md-6" id="scatter2"><p>scatter2</p></div>
+                <!-- <div class="col-md-6" id="vis3"><p>donut</p></div> -->
+              </div>
+            </div>
           </div>
-          <div class="row" style="height: 40vh; display: none" id="vis3">
+          <!-- <div class="row" style="height: 40vh; display: none" id="vis3">
             <div class="col-md-6" id="scatter2"><p>scatter2</p></div>
             <div class="col-md-6" id="donut"><p>donut</p></div>
-          </div>
+          </div> -->
         </div>
         <div class="col-md-6" style="height: 50vh" id="bottomRight"></div>
       </div>
@@ -94,6 +104,7 @@
 
     <!-- d3 -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="./libraries/d3-tip.js"></script>
 
     <script src="./libraries/getData.js"></script>
     <script src="./libraries/firstVis.js"></script>
@@ -101,7 +112,8 @@
     <script src="./libraries/barchart1.js"></script>
 
     <script src="./js/TopLeft.js"></script>
-    <script src="./js/BottomLeft.js"></script>
+    <script src="./js/BottomLeftVis2.js"></script>
+    <script src="./js/BottomLeftVis3.js"></script>
     <script src="./js/TopRight.js"></script>
     <script src="./js/BottomRight.js"></script>
     <script src="./js/main.js"></script>

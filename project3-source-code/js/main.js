@@ -11,7 +11,7 @@ function init() {
             imdbRating: +d['IMDB_Rating']
         }));
 
-        // console.log(deathCountData)
+        console.log(deathCountData)
 
         let yearly_stats = yearlyStatsFunction(deathCountData);
         // console.log(yearly_stats);
@@ -28,16 +28,18 @@ function init() {
         // console.log(genresObj)
 
         let mpaaRatings = Array.from(new Set(deathCountData.map(d => d.mpaaRating)));
-        bottomLeft(genreList, genresObj, deathCountData, mpaaRatings);
+        bottomLeftVis2(genreList, genresObj, deathCountData, mpaaRatings);
 
         d3.selectAll(("input[name='toggleVis23']")).on("change", function () {
             console.log(this.value)
             if (this.value === 'Genres') {
                 d3.select('#vis3').style('display', 'none')
                 d3.select('#vis2').style('display', 'block')
+                bottomLeftVis2(genreList, genresObj, deathCountData, mpaaRatings);
             } else {
                 d3.select('#vis3').style('display', 'block')
                 d3.select('#vis2').style('display', 'none')
+                bottomLeftVis3(mpaaRatings, deathCountData);
             }
         });
     })
