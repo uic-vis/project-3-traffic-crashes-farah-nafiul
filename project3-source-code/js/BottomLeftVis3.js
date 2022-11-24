@@ -3,9 +3,9 @@ const bottomLeftVis3 = (mpaaRatings, deathCountData) => {
     // define the margins
     margin = ({ top: 10, right: 20, bottom: 50, left: 105 });
     // define the width of the visualization
-    visWidth = 600;
+    visWidth = d3.select('#scatter2').node().parentNode.clientWidth;
     // define the height of the visualization
-    visHeight = 500;
+    visHeight = d3.select('#scatter2').node().parentNode.clientHeight;
     // define x using IMDB ratings
     x = d3.scaleLinear()
         .domain(d3.extent(deathCountData, d => d.imdbRating)).nice()
