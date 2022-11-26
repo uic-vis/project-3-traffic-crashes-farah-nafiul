@@ -11,6 +11,8 @@ function init() {
             imdbRating: +d['IMDB_Rating']
         }));
 
+        topRight();
+
         // console.log(deathCountData)
 
         let yearly_stats = yearlyStatsFunction(deathCountData);
@@ -61,7 +63,6 @@ function init() {
         });
     })
 
-    topRight();
     bottomRight();
 
 }
