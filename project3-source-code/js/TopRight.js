@@ -36,9 +36,6 @@ const topRight = () => {
 
     myDataPromises = Promise.all(promises).then(function (topo) {
         console.log(topo)
-
-
-
         let mouseOver = function (d) {
             d3.selectAll(".topo")
                 // .transition()
@@ -73,7 +70,6 @@ const topRight = () => {
         // Draw the map
         svg.append("g")
             .selectAll("path")
-
             .data(topo.features)
             .enter()
             .append("path")
@@ -86,6 +82,9 @@ const topRight = () => {
             .attr("fill", function (d) {
                 d.total = data.get(d.id) || 0;
                 return colorScale(d.total);
+            })
+            .on('click', function (d, i) {
+                console.log(i.properties)
             })
             .style("opacity", 0.7)
             .style("stroke", "black")
