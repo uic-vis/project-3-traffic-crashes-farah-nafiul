@@ -1,15 +1,46 @@
-let movies = [0, 10, 50, 100, 5366]
-let rating = [0, 10]
-let gross = [0, 360000000]
-let runtime = [0, 160]
+let domains = {
+    'totalMovies': [0, 10, 50, 100, 500, 5366],
+    'avgRating': [0, 2, 4, 6, 8, 10],
+    'avgGross': [0, 1000000, 10000000, 100000000, 200000000,  360000000],
+    'avgRuntime': [0, 40, 80, 120, 140, 160]
+}
+
+let mapDropdown = ['totalMovies', 'avgRating', 'avgGross', 'avgRuntime']
+let dataValue = 'totalMovies'
+
+var svg, width, height, projection, data, domain, range, colorScale, legendOffset;
 const topRight = () => {
     // The svg
     d3.select('#map').select('svg').remove()
-    var legendOffset = 25;
-    var margin = { top: 20, right: 10, bottom: 40, left: 100 },
-        width = d3.select('#map').node().clientWidth - margin.left - margin.right - legendOffset,
-        height = d3.select('#map').node().parentNode.clientHeight - margin.top - margin.bottom;
-    var svg = d3.select("#map").append('svg')
+    d3.select('#mapdropdown').selectAll('*').remove();
+
+    d3.select('#mapdropdown')
+        .append('label')
+        .attr('for', 'mapDropdownSelect')
+        .attr('class', 'form-label')
+        .text('Select Attribute')
+        .append('select')
+        .attr('class', 'form-select')
+        .attr('id', 'mapDropdownSelect')
+        .on('change', (d) => {
+            let value = d3.select('#mapDropdownSelect').property('value');
+            dataValue = value;
+            createMap(margin)
+        })
+        .selectAll('option')
+        .data(mapDropdown)
+        .enter()
+        .append('option')
+        .attr('value', (d) => {
+            return d;
+        }).text((d) => d)
+
+
+    legendOffset = 25;
+    var margin = { top: 20, right: 10, bottom: 40, left: 100 };
+    width = d3.select('#map').node().clientWidth - margin.left - margin.right - legendOffset;
+    height = d3.select('#map').node().parentNode.clientHeight - margin.top - margin.bottom;
+    svg = d3.select("#map").append('svg')
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
@@ -18,26 +49,34 @@ const topRight = () => {
 
     // Map and projection
     // var path = d3.geoPath();
-    var projection = d3.geoMercator()
+    projection = d3.geoMercator()
         .scale(70)
         .center([0, 20])
         .translate([width / 2 - margin.left, height / 2]);
 
     // Data and color scale
     // console.log(new Map())
-    var data = new Map();
-    var domain = [100000000, 500000000]
-    var range = ["#deebf7", "#c6dbef", "#6baed6", "#2171b5", "#08306b"]
-    var colorScale = d3.scaleThreshold()
-        .domain(movies)
+    data = new Map();
+    domain = domains.totalMovies
+    // range = ["#deebf7", "#c6dbef", "#6baed6", "#2171b5", "#08306b"]
+    range = ['#f7fbff','#c6dbef','#9ecae1','#6baed6','#2171b5','#08306b']
+    colorScale = d3.scaleThreshold()
+        .domain(domain)
         .range(range);
+
+
+    createMap(margin)
+
+}
+
+function createMap(margin){
 
     // Load external data and boot
     var promises = []
     promises.push(d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson"))
-    promises.push(d3.csv("./data/mapData.csv", function (d) { data.set(d.code, +d.totalMovies); }))
+    promises.push(d3.csv("./data/mapData.csv", function (d) { data.set(d.code, +d[dataValue]); }))
 
-    myDataPromises = Promise.all(promises).then(function (topo) {
+    Promise.all(promises).then(function (topo) {
         console.log(topo)
         let mouseOver = function (d) {
             d3.selectAll(".topo")
@@ -70,9 +109,9 @@ const topRight = () => {
 
         var topo = topo[0]
 
+        var g = svg.append('g')
         // Draw the map
-        svg.append("g")
-            .selectAll("path")
+        g.selectAll("path")
             .data(topo.features)
             .enter()
             .append("path")
@@ -83,7 +122,7 @@ const topRight = () => {
             )
             // set the color of each country
             .attr("fill", function (d) {
-                console.log(data.get(d.id))
+                // console.log(data.get(d.id))
                 d.total = data.get(d.id) || 0;
                 return colorScale(d.total);
             })
@@ -98,6 +137,16 @@ const topRight = () => {
             .append('title')
             .text((d) => d.id + ": " + d3.format(",.2r")(d.total))
 
+
+        // var zoom = d3.zoom()
+        //     .scaleExtent([1, 8])
+        //     .on('zoom', function(event) {
+        //         g.selectAll('path')
+        //         .attr('transform', event.transform);
+        // });
+
+        // svg.call(zoom);
+
         // legend
         var legend_x = width - margin.left - margin.right - legendOffset
         var legend_y = height - margin.top - margin.bottom - legendOffset * 1.5
@@ -108,13 +157,12 @@ const topRight = () => {
         var legend = d3.legendColor()
             // .shapePadding(0)
             // .shapeWidth(5)
-            .labels(movies)
-            .title("Total Movies")
+            .labels(domains[dataValue])
+            .title(dataValue)
             .scale(colorScale)
 
 
         svg.select(".legendQuant")
             .call(legend);
     })
-
 }
