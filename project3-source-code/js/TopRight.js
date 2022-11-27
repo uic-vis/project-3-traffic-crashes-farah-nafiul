@@ -1,3 +1,7 @@
+let movies = [0, 10, 50, 100, 5366]
+let rating = [0, 10]
+let gross = [0, 360000000]
+let runtime = [0, 160]
 const topRight = () => {
     // The svg
     d3.select('#topRight').select('svg').remove()
@@ -23,16 +27,15 @@ const topRight = () => {
     // console.log(new Map())
     var data = new Map();
     var domain = [100000000, 500000000]
-    var labels = ["< 100 M", "100 M - 500 M", "> 500 M"]
-    var range = ["#F8CAEE", "#BF76AF", "#852170"]
+    var range = ["#deebf7", "#c6dbef", "#6baed6", "#2171b5", "#08306b"]
     var colorScale = d3.scaleThreshold()
-        .domain(domain)
+        .domain(movies)
         .range(range);
 
     // Load external data and boot
     var promises = []
     promises.push(d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson"))
-    promises.push(d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv", function (d) { data.set(d.code, +d.pop); }))
+    promises.push(d3.csv("./data/mapData.csv", function (d) { data.set(d.code, +d.totalMovies); }))
 
     myDataPromises = Promise.all(promises).then(function (topo) {
         console.log(topo)
@@ -80,6 +83,7 @@ const topRight = () => {
             )
             // set the color of each country
             .attr("fill", function (d) {
+                console.log(data.get(d.id))
                 d.total = data.get(d.id) || 0;
                 return colorScale(d.total);
             })
@@ -96,14 +100,16 @@ const topRight = () => {
 
         // legend
         var legend_x = width - margin.left - margin.right - legendOffset
-        var legend_y = height - margin.top - margin.bottom - legendOffset
+        var legend_y = height - margin.top - margin.bottom - legendOffset * 1.5
         svg.append("g")
             .attr("class", "legendQuant")
             .attr("transform", "translate(" + legend_x + "," + legend_y + ")");
 
         var legend = d3.legendColor()
-            .labels(labels)
-            .title("Population")
+            // .shapePadding(0)
+            // .shapeWidth(5)
+            .labels(movies)
+            .title("Total Movies")
             .scale(colorScale)
 
 
