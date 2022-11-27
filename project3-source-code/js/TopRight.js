@@ -1,14 +1,14 @@
 let domains = {
     'totalMovies': [0, 10, 50, 100, 500, 5366],
     'avgRating': [0, 2, 4, 6, 8, 10],
-    'avgGross': [0, 1000000, 10000000, 100000000, 200000000,  360000000],
+    'avgGross': [0, 10000000, 50000000, 90000000, 100000000, 360000000],
     'avgRuntime': [0, 40, 80, 120, 140, 160]
 }
 
 let mapDropdown = ['totalMovies', 'avgRating', 'avgGross', 'avgRuntime']
 let dataValue = 'totalMovies'
-
-var svg, width, height, projection, data, domain, range, colorScale, legendOffset;
+let range = ['#f7fbff', '#c6dbef', '#9ecae1', '#6baed6', '#2171b5', '#08306b']
+var svg, width, height, projection, data, domain, legendOffset;
 const topRight = () => {
     // The svg
     d3.select('#map').select('svg').remove()
@@ -24,8 +24,14 @@ const topRight = () => {
         .attr('id', 'mapDropdownSelect')
         .on('change', (d) => {
             let value = d3.select('#mapDropdownSelect').property('value');
+            console.log(value)
             dataValue = value;
-            createMap(margin)
+            domain = domains[dataValue]
+            console.log(domain)
+            let colorScale = d3.scaleThreshold()
+                .domain(domain)
+                .range(range);
+            createMap(margin, colorScale)
         })
         .selectAll('option')
         .data(mapDropdown)
@@ -36,7 +42,7 @@ const topRight = () => {
         }).text((d) => d)
 
 
-    legendOffset = 25;
+    legendOffset = 40;
     var margin = { top: 20, right: 10, bottom: 40, left: 100 };
     width = d3.select('#map').node().clientWidth - margin.left - margin.right - legendOffset;
     height = d3.select('#map').node().parentNode.clientHeight - margin.top - margin.bottom;
@@ -59,17 +65,16 @@ const topRight = () => {
     data = new Map();
     domain = domains.totalMovies
     // range = ["#deebf7", "#c6dbef", "#6baed6", "#2171b5", "#08306b"]
-    range = ['#f7fbff','#c6dbef','#9ecae1','#6baed6','#2171b5','#08306b']
-    colorScale = d3.scaleThreshold()
+    let colorScale = d3.scaleThreshold()
         .domain(domain)
         .range(range);
 
 
-    createMap(margin)
+    createMap(margin, colorScale)
 
 }
 
-function createMap(margin){
+function createMap(margin, colorScale) {
 
     // Load external data and boot
     var promises = []
@@ -77,7 +82,7 @@ function createMap(margin){
     promises.push(d3.csv("./data/mapData.csv", function (d) { data.set(d.code, +d[dataValue]); }))
 
     Promise.all(promises).then(function (topo) {
-        console.log(topo)
+        // console.log(topo)
         let mouseOver = function (d) {
             d3.selectAll(".topo")
                 // .transition()
@@ -148,7 +153,7 @@ function createMap(margin){
         // svg.call(zoom);
 
         // legend
-        var legend_x = width - margin.left - margin.right - legendOffset
+        var legend_x = width - margin.left - margin.right
         var legend_y = height - margin.top - margin.bottom - legendOffset * 1.5
         svg.append("g")
             .attr("class", "legendQuant")
