@@ -4,12 +4,12 @@ let gross = [0, 360000000]
 let runtime = [0, 160]
 const topRight = () => {
     // The svg
-    d3.select('#topRight').select('svg').remove()
+    d3.select('#map').select('svg').remove()
     var legendOffset = 25;
     var margin = { top: 20, right: 10, bottom: 40, left: 100 },
-        width = d3.select('#topRight').node().clientWidth - margin.left - margin.right - legendOffset,
-        height = d3.select('#topRight').node().clientHeight - margin.top - margin.bottom;
-    var svg = d3.select("#topRight").append('svg')
+        width = d3.select('#map').node().clientWidth - margin.left - margin.right - legendOffset,
+        height = d3.select('#map').node().parentNode.clientHeight - margin.top - margin.bottom;
+    var svg = d3.select("#map").append('svg')
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
