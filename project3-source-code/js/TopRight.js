@@ -152,6 +152,12 @@ function createMap(margin, colorScale) {
 
         // svg.call(zoom);
 
+        const handleZoom = (e) => g.selectAll('path').attr('transform', e.transform);
+
+        const zoom = d3.zoom().on('zoom', handleZoom);
+
+        svg.call(zoom);
+
         // legend
         var legend_x = width - margin.left - margin.right
         var legend_y = height - margin.top - margin.bottom - legendOffset * 1.5
