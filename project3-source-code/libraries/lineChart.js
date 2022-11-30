@@ -177,44 +177,16 @@ function lineChart(data) {
                 .style("stroke-width", 4)
                 .style("fill", "none")
 
-            // add the points
-            // svg
-
-            //     // enter a group
-            //     .selectAll("theDots")
-            //     .data(newData)
-            //     .enter()
-            //         .append('g')
-            //         .style("fill", function(d){return colorScale(d.name)})
-            //         .attr("class", function(d){return d.name})
-
-            //     // enter the values per group
-            //     .selectAll("thePoints")
-            //     .data(function(d){return d.values})
-            //     .enter()
-            //         .append("circle")
-            //             .attr("cx", function(d) {return x(d.year)})
-            //             .attr("cy", function(d) {return y(d.avgGross)})
-            //             .attr("r", 5)
-            //             .attr("stroke", "white")
-            
-            // add a label at the end of each line and make interactive
+            // add a legend in the top left corner
             svg
-                .selectAll("theLabels")
+                .selectAll("theLegend")
                 .data(newData)
                 .enter()
                     .append('g')
                     .append("text")
-                        .attr("class", function(d){return d.name})
-                        .datum(function(d) {return {name: d.name, value: d.values[d.values.length - 1]};})
-                        .attr("transform", function(d) {return "translate(" + x(d.value.year) + "," + y(d.value.value) + ")";})
-                        .attr("x", 12)
+                        .attr('x', 30)
+                        .attr('y', function(d, i){return 30 + i * 30})
                         .text(function(d) {return d.name;})
                         .style("fill", function(d){return colorScale(d.name)})
-                        .style("dont-size", 15)
-                    .on("click", function(d){
-                        // if visible, lower opacity; if not visible, increase opacity
-                        curOpacity = d3.selectAll("." + d.name).style("opacity")
-                        d3.selectAll("." + d.name).transition().style("opacity", curOpacity == 1 ? 0.5:1)
-                    })
+                        .style("font-size", 15)
 }
