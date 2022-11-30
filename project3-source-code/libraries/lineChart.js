@@ -147,19 +147,19 @@ function lineChart(data) {
         .domain([1980, 2020])
         .range([0, width - 20]);
     
-    // append the svg element
+    // append the svg element and fix the years to have no commas
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
+        .call(d3.axisBottom(x).tickFormat(d3.format("d")));
 
     // add the y axis
     var y = d3.scaleLinear()
         .domain([0, 220000000])
         .range([height, 0]);
     
-    // append the svg element
-    svg.append("g")
-        .call(d3.axisLeft(y));
+    // append the svg element and format with M
+    var g = svg.append("g")
+        .call(d3.axisLeft(y).ticks(10, "s"));
 
     // add the lines
     var line = d3.line()
