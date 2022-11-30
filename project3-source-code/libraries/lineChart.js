@@ -176,6 +176,20 @@ function lineChart(data) {
                 .attr("stroke", function(d){return colorScale(d.name)})
                 .style("stroke-width", 4)
                 .style("fill", "none")
+                .on("click", function(d){
+
+                    // get the Name of the current label
+                    Name = d.target.__data__.name.replace(" ",".")
+
+                    // get the path from d3 to get the line
+                    Path = d3.select('path.'+Name)
+
+                    // get current opacity
+                    curOpacity = Path.style('opacity')
+
+                    // Sif opacity is 1 change to .25, if .25 change to 1
+                    Path.style('opacity',curOpacity == 1 ? .25:1)
+                    })
 
             // add a legend in the top left corner
             svg
