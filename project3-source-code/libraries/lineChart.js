@@ -185,8 +185,11 @@ function lineChart(data) {
                     .append('g')
                     .append("text")
                         .attr('x', 30)
-                        .attr('y', function(d, i){return 30 + i * 30})
+                        .attr('y', function(d, i){return 30 + i * 20})
                         .text(function(d) {return d.name;})
                         .style("fill", function(d){return colorScale(d.name)})
                         .style("font-size", 15)
+
+                    // clicking functionality changes opacity
+                    .on()
 }
