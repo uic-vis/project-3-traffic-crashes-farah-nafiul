@@ -181,15 +181,20 @@ function lineChart(data) {
                     // get the Name of the current label
                     Name = d.target.__data__.name.replace(" ",".")
 
-                    // get the path from d3 to get the line
-                    Path = d3.select('path.'+Name)
+                    // if US, highlight US
+                    if(Name == "United.States")
+                    {
+                        d3.select('path.'+"United.Kingdom").style('opacity',.25)
+                        d3.select('path.'+"United.States").style('opacity',1)
+                    }
 
-                    // get current opacity
-                    curOpacity = Path.style('opacity')
-
-                    // Sif opacity is 1 change to .25, if .25 change to 1
-                    Path.style('opacity',curOpacity == 1 ? .25:1)
-                    })
+                    // if UK, highlight UK
+                    else if (Name == "United.Kingdom")
+                    {
+                        d3.select('path.'+"United.Kingdom").style('opacity',1)
+                        d3.select('path.'+"United.States").style('opacity',.25)
+                    } 
+                })
 
             // add a legend in the top left corner
             svg
