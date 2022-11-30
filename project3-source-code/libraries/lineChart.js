@@ -134,6 +134,9 @@ function lineChart(data) {
     // for debugging
     console.log(manip);
 
+    // add to array
+    let newData = [manip['United States'], manip['United Kingdom']];
+
     // color scale for countries
     var colorScale = d3.scaleOrdinal()
         .domain(compCountries)
@@ -165,7 +168,7 @@ function lineChart(data) {
     
         // select lines
         svg.selectAll("theLines")
-            .data(manip)
+            .data(newData)
             .enter()
             .append("path")
                 .attr("class", function(d){return d.name})
@@ -179,7 +182,7 @@ function lineChart(data) {
 
                 // enter a group
                 .selectAll("theDots")
-                .data(manip)
+                .data(newData)
                 .enter()
                     .append('g')
                     .style("fill", function(d){return colorScale(d.name)})
@@ -198,7 +201,7 @@ function lineChart(data) {
             // add a label at the end of each line and make interactive
             svg
                 .selectAll("theLabels")
-                .data(manip)
+                .data(newData)
                 .enter()
                     .append('g')
                     .append("text")
