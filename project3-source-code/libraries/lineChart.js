@@ -178,25 +178,25 @@ function lineChart(data) {
                 .style("fill", "none")
 
             // add the points
-            svg
+            // svg
 
-                // enter a group
-                .selectAll("theDots")
-                .data(newData)
-                .enter()
-                    .append('g')
-                    .style("fill", function(d){return colorScale(d.name)})
-                    .attr("class", function(d){return d.name})
+            //     // enter a group
+            //     .selectAll("theDots")
+            //     .data(newData)
+            //     .enter()
+            //         .append('g')
+            //         .style("fill", function(d){return colorScale(d.name)})
+            //         .attr("class", function(d){return d.name})
 
-                // enter the values per group
-                .selectAll("thePoints")
-                .data(function(d){return d.values})
-                .enter()
-                    .append("circle")
-                        .attr("cx", function(d) {return x(d.year)})
-                        .attr("cy", function(d) {return y(d.avgGross)})
-                        .attr("r", 5)
-                        .attr("stroke", "white")
+            //     // enter the values per group
+            //     .selectAll("thePoints")
+            //     .data(function(d){return d.values})
+            //     .enter()
+            //         .append("circle")
+            //             .attr("cx", function(d) {return x(d.year)})
+            //             .attr("cy", function(d) {return y(d.avgGross)})
+            //             .attr("r", 5)
+            //             .attr("stroke", "white")
             
             // add a label at the end of each line and make interactive
             svg
