@@ -82,7 +82,7 @@ function createMap(margin, colorScale, movieData) {
 
     // Load external data and boot
     var promises = []
-    promises.push(d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson"))
+    promises.push(d3.json("./data/world.geojson"))
     promises.push(d3.csv("./data/mapData.csv", function (d) { data.set(d.code, +d[dataValue]); }))
 
     Promise.all(promises).then(function (topo) {
