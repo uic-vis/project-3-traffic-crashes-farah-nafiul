@@ -9,12 +9,12 @@ function dictGenerator(country, data, name) {
 
         // make sure it is the right country
         if (data[i].country == name) {
-           
+
             // if the year has not been seen
             if (!yearChecklist.includes(data[i].year)) {
-            
+
                 // add to the dictionary
-                country[data[i].year] = {"gross": [], "avgGross": 0};
+                country[data[i].year] = { "gross": [], "avgGross": 0 };
 
                 // push
                 country[data[i].year].gross.push(data[i].gross);
@@ -61,20 +61,20 @@ function dictGenerator(country, data, name) {
 function lineChart(data, movieData) {
     d3.select('#lineChart').select('svg').remove()
     // set the margins and dimensions of the graoh
-    var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    var margin = { top: 20, right: 20, bottom: 30, left: 40 },
         width = d3.select('#lineChart').node().clientWidth,
         height = d3.select('#lineChart').node().parentNode.clientHeight;
 
     // append the svg object to the body of the page
     var svg = d3.select("#lineChart")
         .append("svg")
-            .attr("width", width)
-            .attr("height", height)
-            .attr("viewBox", [0, 0, width, height])
-            .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
-        // .append("g")
-        //     .attr("transform",
-        //     "translate(" + margin.left + "," + 0 + ")");
+        .attr("width", width)
+        .attr("height", height)
+        .attr("viewBox", [0, 0, width, height])
+        .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
+    // .append("g")
+    //     .attr("transform",
+    //     "translate(" + margin.left + "," + 0 + ")");
 
     // countries for comparison
     var compCountries = ["United States", "United Kingdom"];
@@ -82,8 +82,8 @@ function lineChart(data, movieData) {
     // reformat given data for an array of arrays of {x, y}
     // appropriate format:
     //{
-        //0: {name: 0, values:[{Year,Avg},{Year,Avg},{Year,Avg}]}
-        //1: {name: 1, values:[{Year,Avg},{Year,Avg},{Year,Avg}]}
+    //0: {name: 0, values:[{Year,Avg},{Year,Avg},{Year,Avg}]}
+    //1: {name: 1, values:[{Year,Avg},{Year,Avg},{Year,Avg}]}
     //}
 
     // container for new manipulated data
@@ -91,15 +91,15 @@ function lineChart(data, movieData) {
 
     // for each country
     for (let aCountry of Object.entries(data)) {
-        
+
         // add country values to the new container
-        manip[aCountry[0]] = {"name": aCountry[0], "values": []};
+        manip[aCountry[0]] = { "name": aCountry[0], "values": [] };
 
         // for each year of the current country       
         for (let aYear of Object.entries(aCountry[1])) {
 
             // push a disctionary with year and average gross
-            manip[aCountry[0]].values.push({"year": aYear[0], "avgGross": aYear[1].avgGross});
+            manip[aCountry[0]].values.push({ "year": aYear[0], "avgGross": aYear[1].avgGross });
         }
     }
 
@@ -112,16 +112,16 @@ function lineChart(data, movieData) {
     // color scale for countries
     var colorScale = d3.scaleOrdinal()
         .domain(compCountries)
-        .range(d3.schemeTableau10);
+        .range(['#66c2a5', '#8da0cb']);
 
     // add the x axis
     var x = d3.scaleLinear()
         .domain([1980, 2020])
         .range([margin.left, width - margin.right]);
-    
+
     // append the svg element and fix the years to have no commas
     svg.append("g")
-    .attr("transform", `translate(0,${height - margin.bottom})`)
+        .attr("transform", `translate(0,${height - margin.bottom})`)
         .call(d3.axisBottom(x).tickFormat(d3.format("d")))
         .call(g => g.append("text")
             .attr("x", width - margin.left)
@@ -134,7 +134,7 @@ function lineChart(data, movieData) {
     var y = d3.scaleLinear()
         .domain([0, 360000000])
         .range([height - margin.bottom, margin.top]);
-    
+
     // append the svg element and format with M
     var g = svg.append("g").attr("transform", `translate(${margin.left},0)`)
         .call(d3.axisLeft(y).ticks(10, "s"))
@@ -147,69 +147,120 @@ function lineChart(data, movieData) {
 
     // add the lines
     var line = d3.line()
-        .x(function(d) {return x(+d.year)})
-        .y(function(d) {return y(+d.avgGross)})
-    
-        // select lines
-        svg.selectAll("theLines")
-            .data(newData)
-            .enter()
-            .append("path")
-            .on('mouseover', (event, d) => {  
-                // console.log(d.name)    
-                let name = d.name.replace(" ","")   
-                // console.log(name)     
-                d3.selectAll('#grossLine').style('opacity', 0.5)        
-                d3.select(`.gross${name}`).style('opacity', 1)                        
+        .x(function (d) { return x(+d.year) })
+        .y(function (d) { return y(+d.avgGross) })
 
-            })
-            .on('mouseleave', (event, d) => {      
-                // console.log('left')                  
-                // d3.select(`.gross${d.name}`).style('opacity', 1)
-                d3.selectAll('#grossLine').style('opacity', 1)
+    // select lines
+    svg.selectAll("theLines")
+        .data(newData)
+        .enter()
+        .append("path")
+        .on('mouseover', (event, d) => {
+            // console.log(d.name)    
+            let name = d.name.replace(" ", "")
+            // console.log(name)     
+            d3.selectAll('#grossLine').style('opacity', 0.5)
+            d3.select(`.gross${name}`).style('opacity', 1)
 
-            })
-                .attr('id', 'grossLine')
-                .attr("class", function(d){
-                    let name = d.name.replace(" ","")
-                    return `gross${name}`})
-                .attr("d", function(d){return line(d.values)})
-                .attr("stroke", function(d){return colorScale(d.name)})
-                .style("stroke-width", 4)
-                .style("fill", "none")
-                .on("click", function(event, d){
-                    scatterPlotForGross(d.name, movieData)
-                })
+        })
+        .on('mouseleave', (event, d) => {
+            // console.log('left')                  
+            // d3.select(`.gross${d.name}`).style('opacity', 1)
+            d3.selectAll('#grossLine').style('opacity', 1)
 
-            // add a legend in the top left corner
-            svg
-                .selectAll("theLegend")
-                .data(newData)
-                .enter()
-                    .append('g')
-                    .on('mouseover', (event, d) => {  
-                        // console.log(d.name)    
-                        let name = d.name.replace(" ","")   
-                        // console.log(name)     
-                        d3.selectAll('#grossLine').style('opacity', 0.5)        
-                        d3.select(`.gross${name}`).style('opacity', 1)                        
+        })
+        .attr('id', 'grossLine')
+        .attr("class", function (d) {
+            let name = d.name.replace(" ", "")
+            return `gross${name}`
+        })
+        .attr("d", function (d) { return line(d.values) })
+        .attr("stroke", function (d) {
+            if (d.name === 'United Kingdom') {
+                return '#fc8d62'
+            } else {
+                return colorScale(d.name)
+            }
 
-                    })
-                    .on('mouseleave', (event, d) => {      
-                        // console.log('left')                  
-                        // d3.select(`.gross${d.name}`).style('opacity', 1)
-                        d3.selectAll('#grossLine').style('opacity', 1)
+        })
+        .style("stroke-width", 4)
+        .style("fill", "none")
+        .on("click", function (event, d) {
+            if (d.name === 'United States') {
+                // '#66c2a5', '#8da0cb'
+                let name = d.name.replace(" ", "")
+                d3.select(`.gross${name}`).style('stroke', '#fc8d62')
+                // grossLegend${name}
+                d3.select(`#grossLegend${name}`).style('fill', '#fc8d62')
+                d3.select(`.grossUnitedKingdom`).style('stroke', '#8da0cb')
+                d3.select(`#grossLegendUnitedKingdom`).style('fill', '#8da0cb')
 
-                    })
-                    .on('click', (event, d)=>{
-                        scatterPlotForGross(d.name, movieData)
-                    })
-                    .append("text")
-                        .attr('x', margin.top + margin.left)
-                        .attr('y', function(d, i){return 30 + i * 20})
-                        .text(function(d) {return d.name;})
-                        .style("fill", function(d){return colorScale(d.name)})
-                        .style("font-size", 15)
-                        
+            } else {
+                let name = d.name.replace(" ", "")
+                d3.select(`.gross${name}`).style('stroke', '#fc8d62')
+                d3.select(`#grossLegend${name}`).style('fill', '#fc8d62')
+                d3.select(`.grossUnitedStates`).style('stroke', '#66c2a5')
+                d3.select(`#grossLegendUnitedStates`).style('fill', '#66c2a5')
+            }
+            scatterPlotForGross(d.name, movieData)
+        })
+
+    // add a legend in the top left corner
+    svg
+        .selectAll("theLegend")
+        .data(newData)
+        .enter()
+        .append('g')
+        .on('mouseover', (event, d) => {
+            // console.log(d.name)    
+            let name = d.name.replace(" ", "")
+            // console.log(name)     
+            d3.selectAll('#grossLine').style('opacity', 0.5)
+            d3.select(`.gross${name}`).style('opacity', 1)
+
+        })
+        .on('mouseleave', (event, d) => {
+            // console.log('left')                  
+            // d3.select(`.gross${d.name}`).style('opacity', 1)
+            d3.selectAll('#grossLine').style('opacity', 1)
+
+        })
+        .on('click', (event, d) => {
+            if (d.name === 'United States') {
+                // '#66c2a5', '#8da0cb'
+                let name = d.name.replace(" ", "")
+                d3.select(`.gross${name}`).style('stroke', '#fc8d62')
+                // grossLegend${name}
+                d3.select(`#grossLegend${name}`).style('fill', '#fc8d62')
+                d3.select(`.grossUnitedKingdom`).style('stroke', '#8da0cb')
+                d3.select(`#grossLegendUnitedKingdom`).style('fill', '#8da0cb')
+
+            } else {
+                let name = d.name.replace(" ", "")
+                d3.select(`.gross${name}`).style('stroke', '#fc8d62')
+                d3.select(`#grossLegend${name}`).style('fill', '#fc8d62')
+                d3.select(`.grossUnitedStates`).style('stroke', '#66c2a5')
+                d3.select(`#grossLegendUnitedStates`).style('fill', '#66c2a5')
+            }
+            scatterPlotForGross(d.name, movieData)
+        })
+        .append("text")
+        .attr('id', (d, i) => {
+            // console.log(d)
+            let name = d.name.replace(" ", "")
+            return `grossLegend${name}`
+        })
+        .attr('x', margin.top + margin.left)
+        .attr('y', function (d, i) { return 30 + i * 20 })
+        .text(function (d) { return d.name; })
+        .style("fill", function (d) {
+            if (d.name === 'United Kingdom') {
+                return '#fc8d62'
+            } else {
+                return colorScale(d.name)
+            }
+        })
+        .style("font-size", 15)
+
 
 }

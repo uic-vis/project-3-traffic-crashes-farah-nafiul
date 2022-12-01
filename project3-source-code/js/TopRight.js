@@ -13,7 +13,7 @@ const topRight = (movieData) => {
     // The svg
     d3.select('#map').select('svg').remove()
     d3.select('#mapdropdown').selectAll('*').remove();
-    
+
 
     d3.select('#mapdropdown')
         .append('label')
@@ -140,13 +140,17 @@ function createMap(margin, colorScale, movieData) {
                 // console.log(topo.features)
                 // console.log(movieData)
                 let name;
-                if(i.properties.name == 'USA'){
+                if (i.properties.name == 'USA') {
                     name = "United States"
-                }else if(i.properties.name === 'England'){
+                } else if (i.properties.name === 'England') {
                     name = "United Kingdom"
-                }else{
+                } else {
                     name = i.properties.name
                 }
+                d3.select(`.grossUnitedKingdom`).style('stroke', '#8da0cb')
+                d3.select(`#grossLegendUnitedKingdom`).style('fill', '#8da0cb')
+                d3.select(`.grossUnitedStates`).style('stroke', '#66c2a5')
+                d3.select(`#grossLegendUnitedStates`).style('fill', '#66c2a5')
                 scatterPlotForGross(name, movieData)
             })
             .style("opacity", 0.7)
@@ -160,10 +164,10 @@ function createMap(margin, colorScale, movieData) {
 
         var zoom = d3.zoom()
             .scaleExtent([1, 8])
-            .on('zoom', function(event) {
+            .on('zoom', function (event) {
                 g.selectAll('path')
-                .attr('transform', event.transform);
-        });
+                    .attr('transform', event.transform);
+            });
 
         svg.call(zoom);
 

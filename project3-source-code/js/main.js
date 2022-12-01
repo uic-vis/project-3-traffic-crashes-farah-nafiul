@@ -11,7 +11,7 @@ function init() {
             imdbRating: +d['IMDB_Rating']
         }));
 
-        
+
 
         // console.log(deathCountData)
 
@@ -47,25 +47,16 @@ function init() {
         d3.csv('./data/movies_refined.csv').then((data => {
 
             // store countries, years, gross, film names, and IMDB scores
-            let movieData = data.map(d =>{
+            let movieData = data.map(d => {
 
-                let rating
-                if(['PG', 'PG-13', ].includes(d['rating'])){
-                    rating = 'PG'
-                }else if (['TV-MA', 'TV-PG', 'TV-14'].includes(d['rating'])){
-                    rating = 'TV'
-                }else{
-                    rating = d['rating']
-                }
 
                 let temp = {
 
                     film: d['name'],
                     year: +d['year'],
-                    score: +d['score'],
+                    score: Math.round(+d['score']),
                     country: d['country'],
                     gross: +d['gross'],
-                    rating: rating
                 }
 
                 return temp
@@ -84,7 +75,7 @@ function init() {
             UK = dictGenerator(UK, movieData, "United Kingdom");
 
             // place them all in a single dictionary
-            countries = {"United States": US, "United Kingdom": UK};
+            countries = { "United States": US, "United Kingdom": UK };
 
             // for debugging
             // console.log(movieData);
@@ -94,7 +85,7 @@ function init() {
 
         }))
 
-        
+
 
         d3.selectAll(("input[name='toggleVis23']")).on("change", function () {
             // console.log(this.value)
@@ -117,7 +108,7 @@ function init() {
         });
     })
 
-    
+
 
 }
 
