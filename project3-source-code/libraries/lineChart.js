@@ -56,53 +56,25 @@ function dictGenerator(country, data, name) {
     return country;
 }
 
-// load movies_refined csv file
-d3.csv('./data/movies_refined.csv').then((data => {
-
-    // store countries, years, gross, film names, and IMDB scores
-    let movieData = data.map(d => ({
-        film: d['name'],
-        year: +d['year'],
-        score: +d['score'],
-        country: d['country'],
-        gross: +d['gross']
-    }));
-
-    // make a dictionary of years for each country
-    let US = {};
-    let UK = {};
-
-    // generate years dictionaries for the US and the UK
-    US = dictGenerator(US, movieData, "United States");
-    UK = dictGenerator(UK, movieData, "United Kingdom");
-
-    // place them all in a single dictionary
-    countries = {"United States": US, "United Kingdom": UK};
-
-    // for debugging
-    // console.log(countries);
-
-    // call the linechart function
-    lineChart(countries);
-
-}))
 
 // function to create the line chart
-function lineChart(data) {
-
+function lineChart(data, movieData) {
+    d3.select('#lineChart').select('svg').remove()
     // set the margins and dimensions of the graoh
-    var margin = {top: 20, right: 0, bottom: 30, left: 40},
-        width = 344,
-        height = 242.883;
+    var margin = {top: 20, right: 20, bottom: 30, left: 40},
+        width = d3.select('#lineChart').node().clientWidth,
+        height = d3.select('#lineChart').node().parentNode.clientHeight;
 
     // append the svg object to the body of the page
     var svg = d3.select("#lineChart")
         .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-            .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
+            .attr("width", width)
+            .attr("height", height)
+            .attr("viewBox", [0, 0, width, height])
+            .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
+        // .append("g")
+        //     .attr("transform",
+        //     "translate(" + margin.left + "," + 0 + ")");
 
     // countries for comparison
     var compCountries = ["United States", "United Kingdom"];
@@ -132,7 +104,7 @@ function lineChart(data) {
     }
 
     // for debugging
-    console.log(manip);
+    // console.log(manip);
 
     // add to array
     let newData = [manip['United States'], manip['United Kingdom']];
@@ -145,21 +117,33 @@ function lineChart(data) {
     // add the x axis
     var x = d3.scaleLinear()
         .domain([1980, 2020])
-        .range([0, width - 20]);
+        .range([margin.left, width - margin.right]);
     
     // append the svg element and fix the years to have no commas
     svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x).tickFormat(d3.format("d")));
+    .attr("transform", `translate(0,${height - margin.bottom})`)
+        .call(d3.axisBottom(x).tickFormat(d3.format("d")))
+        .call(g => g.append("text")
+            .attr("x", width - margin.left)
+            .attr("y", margin.bottom - 4)
+            .attr("fill", "currentColor")
+            .attr("text-anchor", "end")
+            .text('Year →'));
 
     // add the y axis
     var y = d3.scaleLinear()
-        .domain([0, 220000000])
-        .range([height, 0]);
+        .domain([0, 360000000])
+        .range([height - margin.bottom, margin.top]);
     
     // append the svg element and format with M
-    var g = svg.append("g")
-        .call(d3.axisLeft(y).ticks(10, "s"));
+    var g = svg.append("g").attr("transform", `translate(${margin.left},0)`)
+        .call(d3.axisLeft(y).ticks(10, "s"))
+        .call(g => g.append("text")
+            .attr("x", -margin.left)
+            .attr("y", 10)
+            .attr("fill", "currentColor")
+            .attr("text-anchor", "start")
+            .text('↑ Average Gross'));
 
     // add the lines
     var line = d3.line()
@@ -171,29 +155,30 @@ function lineChart(data) {
             .data(newData)
             .enter()
             .append("path")
-                .attr("class", function(d){return d.name})
+            .on('mouseover', (event, d) => {  
+                // console.log(d.name)    
+                let name = d.name.replace(" ","")   
+                // console.log(name)     
+                d3.selectAll('#grossLine').style('opacity', 0.5)        
+                d3.select(`.gross${name}`).style('opacity', 1)                        
+
+            })
+            .on('mouseleave', (event, d) => {      
+                // console.log('left')                  
+                // d3.select(`.gross${d.name}`).style('opacity', 1)
+                d3.selectAll('#grossLine').style('opacity', 1)
+
+            })
+                .attr('id', 'grossLine')
+                .attr("class", function(d){
+                    let name = d.name.replace(" ","")
+                    return `gross${name}`})
                 .attr("d", function(d){return line(d.values)})
                 .attr("stroke", function(d){return colorScale(d.name)})
                 .style("stroke-width", 4)
                 .style("fill", "none")
-                .on("click", function(d){
-
-                    // get the Name of the current label
-                    Name = d.target.__data__.name.replace(" ",".")
-
-                    // if US, highlight US
-                    if(Name == "United.States")
-                    {
-                        d3.select('path.'+"United.Kingdom").style('opacity',.25)
-                        d3.select('path.'+"United.States").style('opacity',1)
-                    }
-
-                    // if UK, highlight UK
-                    else if (Name == "United.Kingdom")
-                    {
-                        d3.select('path.'+"United.Kingdom").style('opacity',1)
-                        d3.select('path.'+"United.States").style('opacity',.25)
-                    } 
+                .on("click", function(event, d){
+                    scatterPlotForGross(d.name, movieData)
                 })
 
             // add a legend in the top left corner
@@ -202,13 +187,29 @@ function lineChart(data) {
                 .data(newData)
                 .enter()
                     .append('g')
+                    .on('mouseover', (event, d) => {  
+                        // console.log(d.name)    
+                        let name = d.name.replace(" ","")   
+                        // console.log(name)     
+                        d3.selectAll('#grossLine').style('opacity', 0.5)        
+                        d3.select(`.gross${name}`).style('opacity', 1)                        
+
+                    })
+                    .on('mouseleave', (event, d) => {      
+                        // console.log('left')                  
+                        // d3.select(`.gross${d.name}`).style('opacity', 1)
+                        d3.selectAll('#grossLine').style('opacity', 1)
+
+                    })
+                    .on('click', (event, d)=>{
+                        scatterPlotForGross(d.name, movieData)
+                    })
                     .append("text")
-                        .attr('x', 30)
+                        .attr('x', margin.top + margin.left)
                         .attr('y', function(d, i){return 30 + i * 20})
                         .text(function(d) {return d.name;})
                         .style("fill", function(d){return colorScale(d.name)})
                         .style("font-size", 15)
+                        
 
-                    // clicking functionality changes opacity
-                    .on()
 }

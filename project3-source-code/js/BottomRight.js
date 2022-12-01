@@ -1,8 +1,12 @@
-const bottomRight = () =>{
+
+const bottomRight = (countries, countryName, movieData) =>{
 
     //d3.select('#bottomRight').text("Bottom Right")
 
     // display the vis
-    d3.select('#bottomRight');
+    // call the linechart function
+    lineChart(countries, movieData);
+
+    scatterPlotForGross(countryName, movieData)
 }
 

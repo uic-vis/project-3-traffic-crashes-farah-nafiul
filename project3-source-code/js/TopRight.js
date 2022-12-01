@@ -9,10 +9,11 @@ let mapDropdown = ['totalMovies', 'avgRating', 'avgGross', 'avgRuntime']
 let dataValue = 'totalMovies'
 let range = ['#f7fbff', '#c6dbef', '#9ecae1', '#6baed6', '#2171b5', '#08306b']
 var svg, width, height, projection, data, domain, legendOffset;
-const topRight = () => {
+const topRight = (movieData) => {
     // The svg
     d3.select('#map').select('svg').remove()
     d3.select('#mapdropdown').selectAll('*').remove();
+    
 
     d3.select('#mapdropdown')
         .append('label')
@@ -24,14 +25,15 @@ const topRight = () => {
         .attr('id', 'mapDropdownSelect')
         .on('change', (d) => {
             let value = d3.select('#mapDropdownSelect').property('value');
-            console.log(value)
+            // console.log(value)
             dataValue = value;
             domain = domains[dataValue]
-            console.log(domain)
+            // console.log(domain)
             let colorScale = d3.scaleThreshold()
                 .domain(domain)
                 .range(range);
-            createMap(margin, colorScale)
+            d3.select('#map').select('svg').remove()
+            createMap(margin, colorScale, movieData)
         })
         .selectAll('option')
         .data(mapDropdown)
@@ -46,12 +48,7 @@ const topRight = () => {
     var margin = { top: 20, right: 10, bottom: 40, left: 100 };
     width = d3.select('#map').node().clientWidth - margin.left - margin.right - legendOffset;
     height = d3.select('#map').node().parentNode.clientHeight - margin.top - margin.bottom;
-    svg = d3.select("#map").append('svg')
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
+
 
     // Map and projection
     // var path = d3.geoPath();
@@ -70,11 +67,18 @@ const topRight = () => {
         .range(range);
 
 
-    createMap(margin, colorScale)
+    createMap(margin, colorScale, movieData)
 
 }
 
-function createMap(margin, colorScale) {
+function createMap(margin, colorScale, movieData) {
+
+    svg = d3.select("#map").append('svg')
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
 
     // Load external data and boot
     var promises = []
@@ -132,7 +136,18 @@ function createMap(margin, colorScale) {
                 return colorScale(d.total);
             })
             .on('click', function (d, i) {
-                console.log(i.properties)
+                // console.log(i.properties)
+                // console.log(topo.features)
+                // console.log(movieData)
+                let name;
+                if(i.properties.name == 'USA'){
+                    name = "United States"
+                }else if(i.properties.name === 'England'){
+                    name = "United Kingdom"
+                }else{
+                    name = i.properties.name
+                }
+                scatterPlotForGross(name, movieData)
             })
             .style("opacity", 0.7)
             .style("stroke", "black")
@@ -143,20 +158,20 @@ function createMap(margin, colorScale) {
             .text((d) => d.id + ": " + d3.format(",.2r")(d.total))
 
 
-        // var zoom = d3.zoom()
-        //     .scaleExtent([1, 8])
-        //     .on('zoom', function(event) {
-        //         g.selectAll('path')
-        //         .attr('transform', event.transform);
-        // });
-
-        // svg.call(zoom);
-
-        const handleZoom = (e) => g.selectAll('path').attr('transform', e.transform);
-
-        const zoom = d3.zoom().on('zoom', handleZoom);
+        var zoom = d3.zoom()
+            .scaleExtent([1, 8])
+            .on('zoom', function(event) {
+                g.selectAll('path')
+                .attr('transform', event.transform);
+        });
 
         svg.call(zoom);
+
+        // const handleZoom = (e) => g.selectAll('path').attr('transform', e.transform);
+
+        // const zoom = d3.zoom().on('zoom', handleZoom);
+
+        // svg.call(zoom);
 
         // legend
         var legend_x = width - margin.left - margin.right

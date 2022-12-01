@@ -11,7 +11,7 @@ function init() {
             imdbRating: +d['IMDB_Rating']
         }));
 
-        topRight();
+        
 
         // console.log(deathCountData)
 
@@ -42,8 +42,62 @@ function init() {
             bottomLeftVis3(mpaaRatings, deathCountData, mpaaRatingsCounts);
         }
 
+
+        // load movies_refined csv file
+        d3.csv('./data/movies_refined.csv').then((data => {
+
+            // store countries, years, gross, film names, and IMDB scores
+            let movieData = data.map(d =>{
+
+                let rating
+                if(['PG', 'PG-13', ].includes(d['rating'])){
+                    rating = 'PG'
+                }else if (['TV-MA', 'TV-PG', 'TV-14'].includes(d['rating'])){
+                    rating = 'TV'
+                }else{
+                    rating = d['rating']
+                }
+
+                let temp = {
+
+                    film: d['name'],
+                    year: +d['year'],
+                    score: +d['score'],
+                    country: d['country'],
+                    gross: +d['gross'],
+                    rating: rating
+                }
+
+                return temp
+            });
+
+            data.map(d => {
+
+            })
+
+            // make a dictionary of years for each country
+            let US = {};
+            let UK = {};
+
+            // generate years dictionaries for the US and the UK
+            US = dictGenerator(US, movieData, "United States");
+            UK = dictGenerator(UK, movieData, "United Kingdom");
+
+            // place them all in a single dictionary
+            countries = {"United States": US, "United Kingdom": UK};
+
+            // for debugging
+            // console.log(movieData);
+
+            bottomRight(countries, 'United Kingdom', movieData);
+            topRight(movieData);
+
+        }))
+
+        
+
         d3.selectAll(("input[name='toggleVis23']")).on("change", function () {
-            console.log(this.value)
+            // console.log(this.value)
             if (this.value === 'Genres') {
                 d3.select('#vis3').style('display', 'none')
                 d3.select('#vis2').style('display', 'block')
@@ -63,7 +117,7 @@ function init() {
         });
     })
 
-    bottomRight();
+    
 
 }
 

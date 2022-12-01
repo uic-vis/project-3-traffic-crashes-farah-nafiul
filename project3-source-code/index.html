@@ -15,6 +15,8 @@
       rel="stylesheet"
       href="//rawgithub.com/Caged/d3-tip/master/examples/example-styles.css"
     />
+
+    <link rel="stylesheet" href="./css/style.css">
   </head>
   <body>
     <div class="container-fluid">
@@ -100,14 +102,15 @@
             <div class="col-md-6" id="donut"><p>donut</p></div>
           </div> -->
         </div>
-        <div class="col-md-6" style="height: 5vh" id="bottomRight">
-          <div class="row" style="height: 5vh">
+        <div class="col-md-6" style="height: 50vh" id="bottomRight">
+          <div class="row" style="height: 4vh">
               <h5>US vs UK: Average Movie Gross Over Time</h5>
           </div>
-          <div class="row" style="height: 40vh">
-            <div style = "font-size: 10px;" id = "year">↑ Average Gross</div>
-            <div id="lineChart"></div>
-            <div style = "font-size: 10px; text-align: center;" id = "year">Year →</div>
+          <div class="row" style="height: 45vh">
+            <!-- <div style = "font-size: 10px;" id = "year">↑ Average Gross</div> -->
+            <div class="col-md-6" id="lineChart"></div>
+            <!-- <div style = "font-size: 10px; text-align: center;" id = "year">Year →</div> -->
+            <div class="col-md-6" id="grossScatter"></div>
           </div>
         </div>
       </div>
@@ -136,6 +139,7 @@
     <script src="./libraries/scatterPlot1.js"></script>
     <script src="./libraries/barchart1.js"></script>
     <script src="./libraries/donutChart.js"></script>
+    <script src="./libraries/scatterPlotForGross.js"></script>
     <script src="./libraries/lineChart.js"></script>
 
     <script src="./js/TopLeft.js"></script>

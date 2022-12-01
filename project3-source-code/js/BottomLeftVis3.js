@@ -3,7 +3,7 @@ let inset = 6;
 const bottomLeftVis3 = (ratings, deathCountData, ratingCounts) => {
     mpaaRatings = ratings;
     mpaaRatingsCounts = ratingCounts;
-    console.log(d3.select('#scatter2').node().parentNode)
+    // console.log(d3.select('#scatter2').node().parentNode)
     // define the margins
     margin = ({ top: 20, right: 30, bottom: 30, left: 40 });
     // define the width of the visualization
@@ -11,7 +11,7 @@ const bottomLeftVis3 = (ratings, deathCountData, ratingCounts) => {
     // define the height of the visualization
     visHeight = d3.select('#scatter2').node().parentNode.clientHeight;
     // define x using IMDB ratings
-    console.log(visHeight, visWidth)
+    // console.log(visHeight, visWidth)
     x = d3.scaleLinear()
         .domain(d3.extent(deathCountData, d => d.imdbRating)).nice()
         .range([margin.left + inset, visWidth - margin.right - inset])
