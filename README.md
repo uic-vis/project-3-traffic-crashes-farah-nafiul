@@ -29,7 +29,7 @@ As shown in the image above, the dataset contains 545 rows, each representing a 
 
 The first interactive visualization intends to answer the following questions:
 
-* Did the number of on-screen deaths increas over the years?
+* Did the number of on-screen deaths increase over the years?
 * Did the movie industry become more violent over the years?
 
 The attributes being used are Year, Body_Count, Length_Minutes, and IMDB_Rating.
@@ -162,3 +162,13 @@ As shown in the image above, there is an observable climb in which films with hi
 </p>
 
 Using the brush tool to make a selection above 100 body counts, it can be determined from the donut chart that 60.5% of the films with body counts over 100 are rated R while 0.84% are rated G. Selecting the right side of the scatter plot with IMDB ratings of at least 8, it can be determined that 62.12% of the films with an IMDB rating of 8 or above are rated R while 1.52% are rated X.
+
+# Data Description - Project 3
+
+The movie industry dataset provided by Kaggle contains 7425 movies from 1980 to 2020. As shown in the image below, it contains 7425 rows, each representing a film, and 9 columns. The attributes included in the columns are as follows: name, rating, genre, year, score, votes, country, gross, and runtime.
+
+<p align = "center">
+  <img src = "Images/Industry Dataset.png"/>
+</p>
+
+For our own purposes, the data has been manipulated and used to calculate additional useful information such as the average gross per country and average gross per year for each country.
