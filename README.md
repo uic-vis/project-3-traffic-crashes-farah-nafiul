@@ -177,9 +177,35 @@ Using the brush tool to make a selection above 100 body counts, it can be determ
 
 ## Questions
 
+The fourth interactive visualization, which is a spatial view, intends to answer the following questions:
+
+* Which country's movie industry releases the most movies?
+* Which country's average IMDb score is highest?
+* Which country has the highest average gross?
+* Which country has the longest average runtime?
+
+Taking advantage of the data available, the averages were calculated using four attributes: score, country, gross, and runtime.
+
 ## Visual Encodings and Interactions
 
+The fourth visualization, found at the top right of the webpage, is a spatial view that displays information regarding movie industries around the world. It provides a dropdown menu for the user to select one of four attributes to change the visualization: totalMovies, avgRating, avgGross, and avgRuntime.
+
+<p align = "center">
+  <img src = "Images/Spatial View.png"/>
+</p>
+
+The legend at the right uses a blue hue that increases in intensity for the larger values. Hovering the mouse over a country "highlights" that country and reveals additional information. For example, in the image above, it reveals the average gross of the United States which is 90,000,000. The user can also pan around the map by clicking and dragging while also being able to zoom using the wheel of their mouse.
+
+<p align = "center">
+  <img src = "Images/China Scatterplot.png"/>
+</p>
+
+It should be noted that the spatial view is also a linked view. Selecting a country on the map changes the points on the scatter plot of the fifth and final visualization. In the image above, China has been selected. The scatter plot now displays all the films released in China that are included in the dataset.
+
+
 ## Findings
+
+With the darkest blues, it can be determined by the spatial view that the United States and the United Kingdom have the greatest number of total movies which are 5,400 and 790 respectively. Regarding the highest average rating, many countries' average IMDb scores range between 6.1 and 7.7. In terms of average gross, China and Finland are highest with 220,000,000 and 170,000,000 respectively. Lastly, the average runtime is highest for India.
 
 # Visualization 5 - Bottom Right
 
