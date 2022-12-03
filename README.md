@@ -211,6 +211,31 @@ With the darkest blues, it can be determined by the spatial view that the United
 
 ## Questions
 
+The fifth and final visualization, which is a multi-linked view, intends to answer the following questions:
+
+* Between the United States and the United Kingdom, which country experienced greater growth in terms of average gross over time?
+* Has the average gross increased over time for the United States and/or the United Kingdom?
+* Which films — for a specified country — are the highest grossing?
+* Are films with the highest grosses those that have high IMDb scores?
+
+To answer the questions above, the multi-linked visualizations make use of the name, year, score, country, and gross attribites. The average gross per year for the United States and United Kingdom were calculated.
+
 ## Visual Encodings and Interactions
 
+The line chart allows the user to select the United States or the United Kingdom by either clicking on the name of the country given in the color-coded legend or clicking on the lines themselves. Doing so changes the scatter plot on the right which displays all the films included in the dataset from the selected country. 
+
+<p align = "center">
+  <img src = "Images/Multi-Linked View.png"/>
+</p>
+
+By hovering the mouse over a point on the scatter plot, additional information is revealed such as the film name, year, and gross. In addition, hovering the mouse over the color-coded IMBb scores legend filters the data where it only displays the films that fall under the score of interest.
+
 ## Findings
+
+From the line chart, it can be determined that both the United States and the United Kingdom experienced a growth in average gross over time, specifically from 1980 to 2020. However, there is a fluctuation experienced by the United Kingdom from the year 2000 to about 2015. By filtering the films by IMDb score using the legend, it is clear that the higher the IMBd score, the higher the gross of the film.
+
+<p align = "center">
+  <img src = "Images/Score Filtering.png"/>
+</p>
+
+In the above image, the points are being filtered, from left to right, by the scores 4, 5, 6, 7, and 8. Films with an IMDb score of 4 are low on the y-axis while films with an IMDb score of 8 experience a rise on the y-axis.
