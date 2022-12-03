@@ -172,3 +172,19 @@ The movie industry dataset provided by Kaggle contains 7425 movies from 1980 to 
 </p>
 
 For our own purposes, the data has been manipulated and used to calculate additional useful information such as the average gross per country and average gross per year for each country.
+
+# Visualization 4 - Top Right
+
+## Questions
+
+## Visual Encodings and Interactions
+
+## Findings
+
+# Visualization 5 - Bottom Right
+
+## Questions
+
+## Visual Encodings and Interactions
+
+## Findings
